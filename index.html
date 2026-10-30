@@ -1,0 +1,733 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paw Paradise - Pet Store</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: #fffaf5;
+    color: #333;
+}
+
+header {
+    background: white;
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px #ddd;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+    color: #f07849;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    margin: 12px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #f07849;
+}
+
+.cart {
+    padding: 12px 20px;
+    border: none;
+    background: #f07849;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+.hero {
+    min-height: 520px;
+    background: #ffeadf;
+    padding: 70px 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.hero-content {
+    max-width: 500px;
+    animation: slide 1s ease;
+}
+
+.hero h1 {
+    font-size: 55px;
+    margin-bottom: 20px;
+}
+
+.hero h1 span {
+    color: #f07849;
+}
+
+.hero p {
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.hero img {
+    width: 43%;
+    max-width: 450px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 30px;
+    animation: float 3s infinite ease-in-out;
+}
+
+.btn {
+    padding: 14px 28px;
+    background: #f07849;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: .3s;
+}
+
+.btn:hover {
+    background: #d85d30;
+    transform: translateY(-4px);
+}
+
+section {
+    padding: 65px 8%;
+    text-align: center;
+}
+
+section h2 {
+    font-size: 34px;
+    margin-bottom: 15px;
+}
+
+.subtitle {
+    color: #888;
+    margin-bottom: 35px;
+}
+
+.categories {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 35px;
+}
+
+.category {
+    border: 1px solid #eee;
+    background: white;
+    padding: 13px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.category:hover,
+.category.active {
+    background: #f07849;
+    color: white;
+}
+
+.search {
+    width: 80%;
+    max-width: 400px;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    margin-bottom: 35px;
+    outline: none;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.product {
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    text-align: left;
+    box-shadow: 0 5px 20px #00000010;
+    transition: .4s;
+    animation: fade .6s ease;
+}
+
+.product:hover {
+    transform: translateY(-10px);
+}
+
+.product img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.product h3 {
+    margin: 15px 0 8px;
+}
+
+.product p {
+    color: #888;
+    font-size: 13px;
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.price {
+    color: #f07849;
+    font-weight: bold;
+}
+
+.add {
+    background: #29352e;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.add:hover {
+    background: #f07849;
+}
+
+.offer {
+    background: #29352e;
+    color: white;
+    padding: 50px;
+    margin: 20px 8%;
+    border-radius: 25px;
+}
+
+.offer p {
+    margin: 15px;
+    color: #ddd;
+}
+
+footer {
+    background: #ffeadf;
+    padding: 35px;
+    text-align: center;
+    line-height: 2;
+}
+
+/* Shopping cart */
+
+.cart-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 350px;
+    height: 100vh;
+    background: white;
+    padding: 25px;
+    z-index: 300;
+    transition: .4s;
+    overflow-y: auto;
+    box-shadow: -5px 0 20px #0002;
+}
+
+.cart-panel.open {
+    right: 0;
+}
+
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.cart-item {
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: #0007;
+    display: none;
+    z-index: 200;
+}
+
+.overlay.show {
+    display: block;
+}
+
+/* Animations */
+
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+@keyframes slide {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile responsive */
+
+@media(max-width: 900px) {
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero h1 {
+        font-size: 40px;
+    }
+}
+
+@media(max-width: 600px) {
+    header {
+        padding: 15px 4%;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .hero {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .hero img {
+        width: 100%;
+        height: 250px;
+    }
+
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .product img {
+        height: 130px;
+    }
+
+    section {
+        padding: 45px 4%;
+    }
+
+    .offer {
+        margin: 15px;
+        padding: 30px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🐾 Paw Paradise</div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#categories">Categories</a>
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+    </nav>
+
+    <button class="cart" onclick="toggleCart()">
+        🛒 Cart (<span id="count">0</span>)
+    </button>
+</header>
+
+<!-- HOME -->
+
+<div class="hero" id="home">
+
+    <div class="hero-content">
+        <h1>Love Your Pets, <span>Every Day!</span></h1>
+
+        <p>
+            Welcome to Paw Paradise! Find adorable pets,
+            delicious food, exciting toys and everything
+            your lovely pets need.
+        </p>
+
+        <button class="btn"
+        onclick="document.getElementById('shop').scrollIntoView()">
+            Shop Now →
+        </button>
+    </div>
+
+    <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=700"
+    alt="Cute dog">
+</div>
+
+<!-- CATEGORIES -->
+
+<section id="categories">
+
+    <h2>Explore Categories 🐾</h2>
+    <p class="subtitle">Everything for your lovely companions</p>
+
+    <div class="categories">
+        <button class="category active" onclick="filter('All',this)">All</button>
+        <button class="category" onclick="filter('Dogs',this)">🐶 Dogs</button>
+        <button class="category" onclick="filter('Cats',this)">🐱 Cats</button>
+        <button class="category" onclick="filter('Birds',this)">🦜 Birds</button>
+        <button class="category" onclick="filter('Food',this)">🥣 Food</button>
+        <button class="category" onclick="filter('Toys',this)">🧸 Toys</button>
+    </div>
+
+</section>
+
+<!-- PRODUCTS -->
+
+<section id="shop">
+
+    <h2>Our Products ❤️</h2>
+    <p class="subtitle">Choose the best for your pets</p>
+
+    <input
+    class="search"
+    id="search"
+    type="text"
+    placeholder="🔍 Search products..."
+    oninput="applyFilters()">
+
+    <div class="products" id="products"></div>
+
+</section>
+
+<!-- SPECIAL OFFER -->
+
+<div class="offer" id="about">
+    <h2>🎉 Special Pet Offer!</h2>
+
+    <p>
+        Make your pets happy with our amazing
+        collection of food, toys and accessories.
+    </p>
+
+    <button class="btn"
+    onclick="document.getElementById('shop').scrollIntoView()">
+        Explore More
+    </button>
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+    <h2>🐾 Paw Paradise</h2>
+    <p>Your pet's happiness is our priority!</p>
+    <p>Contact: pawparadise@example.com</p>
+    <p>© 2026 Paw Paradise. All Rights Reserved.</p>
+</footer>
+
+<!-- CART -->
+
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+<div class="cart-panel" id="cartPanel">
+
+    <span class="close" onclick="toggleCart()">✕</span>
+
+    <h2>🛒 Shopping Cart</h2>
+
+    <div id="cartItems">Your cart is empty.</div>
+
+    <h3 id="total">Total: ₹0</h3>
+
+    <br>
+
+    <button class="btn" onclick="checkout()">
+        Checkout
+    </button>
+
+</div>
+
+<script>
+
+// PRODUCTS
+
+const products = [
+
+{
+name:"Golden Retriever",
+category:"Dogs",
+price:15000,
+image:"https://images.unsplash.com/photo-1552053831-71594a27632d?w=500",
+desc:"Friendly and adorable dog"
+},
+
+{
+name:"Cute Persian Cat",
+category:"Cats",
+price:12000,
+image:"https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=500",
+desc:"Soft and fluffy companion"
+},
+
+{
+name:"Beautiful Parrot",
+category:"Birds",
+price:3500,
+image:"https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=500",
+desc:"Colorful feathered friend"
+},
+
+{
+name:"Premium Dog Food",
+category:"Food",
+price:850,
+image:"https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=500",
+desc:"Healthy food for dogs"
+},
+
+{
+name:"Cute Puppy",
+category:"Dogs",
+price:10000,
+image:"https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=500",
+desc:"Lovely little puppy"
+},
+
+{
+name:"Lovely Kitten",
+category:"Cats",
+price:7500,
+image:"https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500",
+desc:"Playful little kitten"
+},
+
+{
+name:"Pet Chew Toy",
+category:"Toys",
+price:299,
+image:"https://images.unsplash.com/photo-1535294435445-d7249524ef2e?w=500",
+desc:"Fun toy for your pets"
+},
+
+{
+name:"Cat Food",
+category:"Food",
+price:650,
+image:"https://images.unsplash.com/photo-1606214174585-fe31582dc6ee?w=500",
+desc:"Delicious cat food"
+}
+
+];
+
+let cart = [];
+let currentCategory = "All";
+
+// DISPLAY PRODUCTS
+
+function displayProducts(list) {
+
+const container = document.getElementById("products");
+
+container.innerHTML = "";
+
+if(list.length === 0) {
+container.innerHTML = "<p>No products found!</p>";
+return;
+}
+
+list.forEach(p => {
+
+const index = products.indexOf(p);
+
+container.innerHTML += `
+
+<div class="product">
+
+<img src="${p.image}" alt="${p.name}">
+
+<h3>${p.name}</h3>
+
+<p>${p.desc}</p>
+
+<div class="bottom">
+
+<span class="price">₹${p.price.toLocaleString("en-IN")}</span>
+
+<button class="add" onclick="addToCart(${index})">
++ Add
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+// FILTER PRODUCTS
+
+function filter(category,button) {
+
+currentCategory = category;
+
+document.querySelectorAll(".category").forEach(btn => {
+btn.classList.remove("active");
+});
+
+button.classList.add("active");
+
+applyFilters();
+
+}
+
+// SEARCH
+
+function applyFilters() {
+
+const search = document.getElementById("search").value.toLowerCase();
+
+const result = products.filter(p => {
+
+const categoryMatch =
+currentCategory === "All" ||
+p.category === currentCategory;
+
+const searchMatch =
+p.name.toLowerCase().includes(search) ||
+p.desc.toLowerCase().includes(search);
+
+return categoryMatch && searchMatch;
+
+});
+
+displayProducts(result);
+
+}
+
+// ADD TO CART
+
+function addToCart(index) {
+
+cart.push(products[index]);
+
+updateCart();
+
+}
+
+// UPDATE CART
+
+function updateCart() {
+
+document.getElementById("count").innerText = cart.length;
+
+const items = document.getElementById("cartItems");
+
+if(cart.length === 0) {
+
+items.innerHTML = "Your cart is empty.";
+
+} else {
+
+items.innerHTML = cart.map((p,i) => `
+
+<div class="cart-item">
+
+<b>${p.name}</b><br>
+
+₹${p.price.toLocaleString("en-IN")}
+
+<button onclick="removeItem(${i})"
+style="float:right;color:red;border:none;background:none;cursor:pointer">
+Remove
+</button>
+
+</div>
+
+`).join("");
+
+}
+
+let total = cart.reduce((sum,p) => sum + p.price,0);
+
+document.getElementById("total").innerText =
+"Total: ₹" + total.toLocaleString("en-IN");
+
+}
+
+// REMOVE ITEM
+
+function removeItem(index) {
+
+cart.splice(index,1);
+
+updateCart();
+
+}
+
+// OPEN CART
+
+function toggleCart() {
+
+document.getElementById("cartPanel").classList.toggle("open");
+
+document.getElementById("overlay").classList.toggle("show");
+
+}
+
+// CHECKOUT
+
+function checkout() {
+
+if(cart.length === 0) {
+
+alert("Your cart is empty!");
+
+return;
+
+}
+
+alert("Thank you for shopping at Paw Paradise! 🐾 This is a demo checkout.");
+
+}
+
+// INITIALIZE
+
+displayProducts(products);
+
+</script>
+
+</body>
+</html>
